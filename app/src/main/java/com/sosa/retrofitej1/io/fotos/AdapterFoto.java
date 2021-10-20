@@ -1,7 +1,9 @@
 package com.sosa.retrofitej1.io.fotos;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.PictureDrawable;
 import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,11 +20,14 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.load.model.GlideUrl;
+import com.bumptech.glide.load.model.LazyHeaders;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.sosa.retrofitej1.R;
 import com.sosa.retrofitej1.modelo.Photos;
 
+import java.io.InputStream;
 import java.util.List;
 
 public class AdapterFoto extends RecyclerView.Adapter<AdapterFoto.MiViewHolder> {
@@ -51,13 +56,16 @@ public class AdapterFoto extends RecyclerView.Adapter<AdapterFoto.MiViewHolder> 
         Photos foto = lista.get(position);
         holder.TVTitulo.setText(foto.getTitle());
 
+        GlideUrl url = new GlideUrl(foto.getUrl(), new LazyHeaders.Builder()
+                .addHeader("User-Agent", "your-user-agent")
+                .build());
+        Glide.with(root)//contexto
 
-       /* Glide.with(root)//contexto
-
-                .load(foto.getUrl())//url de la imagen
-
+                .load(url)//url de la imagen
+                .error(R.drawable.ic_launcher_background)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)// guarda en el cache
-                .into(holder.imagen); // se encarga de setear la imagen*/
+                .encodeFormat(Bitmap.CompressFormat.JPEG)
+                .into(holder.imagen); // se encarga de setear la imagen
 
       /* Glide.with(holder.itemView.getContext()).load(foto.getUrl())
                 .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
@@ -74,7 +82,7 @@ public class AdapterFoto extends RecyclerView.Adapter<AdapterFoto.MiViewHolder> 
                         return false;
                     }
                 }).into(holder.imagen);*/
-      
+
     };
 
 
